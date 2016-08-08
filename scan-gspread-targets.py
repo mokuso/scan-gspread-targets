@@ -4,16 +4,14 @@
 
 import json
 import gspread
-from oauth2client.client import SignedJwtAssertionCredentials
+from oauth2client.service_account import ServiceAccountCredentials
 from nessrest import ness6rest
 import getpass
 
 # Login with your Google account's API key
-json_key = json.load(open('API-xxxxxxxxxx.json'))
-scope = ['https://spreadsheets.google.com/feeds']
+scopes = ['https://spreadsheets.google.com/feeds']
 
-credentials = SignedJwtAssertionCredentials(json_key['client_email'], json_key['private_key'], scope)
-
+credentials = ServiceAccountCredentials.from_json_keyfile_name('API-xxxxxxxxxxxx.json', scopes)
 gc = gspread.authorize(credentials)
 
 # Open worksheet from spreadsheet
@@ -27,7 +25,7 @@ temp_hosts=[]
 for i in host_list:
   # ignore the first entry as it's just header information
   # del host_list[0]
-  if i != 'IP':
+  if i and i != 'IP':
     # iterate through all rows and add to a temp array
     temp_hosts.append(i)
 
